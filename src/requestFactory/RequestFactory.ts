@@ -1,9 +1,11 @@
-import Web3 = require('web3');
+import Web3 from 'web3';
 import { Util } from '..';
 import RequestFactoryABI from '../abi/RequestFactoryABI';
 import { RequestFactory as RequestFactoryContract } from '../../types/web3-contracts/RequestFactory';
 import { EventEmitter } from 'events';
-import { EventLog } from 'web3/types';
+import { EventLog } from 'web3-core';
+import { EventData } from 'web3-eth-contract';
+import { Filter } from 'web3-eth-contract';
 import { TemporalUnit } from '../eac';
 import Constants from '../Constants';
 
@@ -36,14 +38,14 @@ export default class RequestFactory {
     return this.instance.methods.isKnownRequest(requestAddress).call();
   }
 
-  public watchRequestCreatedLogs(
+  public async watchRequestCreatedLogs(
     filter = {},
     fromBlock = 1,
     callback: (error: any, log: EventLog) => void
-  ): EventEmitter {
+  ): Promise<EventData[]> {
     const options = { filter, fromBlock };
 
-    return this.instance.events.RequestCreated(options, callback);
+    return this.instance.events.RequestCreated(options);
   }
 
   public async stopWatch(event: EventEmitter) {
@@ -85,7 +87,7 @@ export default class RequestFactory {
   }
 
   public async getRequestCreatedEvents(
-    filter: object = {},
+    filter: Filter = {},
     fromBlock: BlockType = 'genesis',
     toBlock: BlockType = 'latest',
     topics: string[] = []
@@ -94,7 +96,7 @@ export default class RequestFactory {
       filter,
       fromBlock,
       toBlock,
-      topics
+      topics,
     });
     console.log(events);
     return events;

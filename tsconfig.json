@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
         "suppressImplicitAnyIndexErrors": true,
         "noImplicitAny": true,
         "noUnusedLocals": true,
@@ -11,6 +12,7 @@
         ],
         "target": "es2015",
         "moduleResolution": "node",
+        "esModuleInterop": true,
         "module": "none",
         "declaration": true,
         "sourceMap": true

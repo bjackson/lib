@@ -2,11 +2,11 @@ import BigNumber from 'bignumber.js';
 import TransactionRequestData from './TransactionRequestData';
 import Constants from '../Constants';
 import Util from '../utils/Util';
-import Web3 = require('web3');
+import Web3 from 'web3';
 import TransactionRequestCoreABI from '../abi/TransactionRequestCoreABI';
 import { TransactionRequestCore } from '../../types/web3-contracts/TransactionRequestCore';
 import { TemporalUnit } from '../eac';
-import { EventLog } from 'web3/types';
+import { EventLog } from 'web3-core';
 import { ITransactionRequest } from './ITransactionRequest';
 
 interface ExecutedEvent {
@@ -38,7 +38,7 @@ export default class TransactionRequest implements ITransactionRequest {
   }
 
   get address(): string {
-    return this.instance._address.toLowerCase();
+    return this.instance.options.address;
   }
 
   /**

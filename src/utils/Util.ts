@@ -1,12 +1,12 @@
 import BigNumber from 'bignumber.js';
-import Web3 = require('web3');
+import Web3 from 'web3';
 import Constants from '../Constants';
 import * as ethUtil from 'ethereumjs-util';
-import { TransactionReceipt, Subscribe } from 'web3/types';
-import { Provider } from 'web3/providers';
-import { Block, Transaction, BlockType } from 'web3/eth/types';
+import { TransactionReceipt, provider, PromiEvent } from 'web3-core';
+import { Block } from 'web3-eth';
+import { WebsocketProvider } from 'web3/providers';
+import { Transaction, BlockType } from 'web3/eth/types';
 import { ITransactionRequest } from '../transactionRequest/ITransactionRequest';
-import PromiEvent from 'web3/promiEvent';
 
 import * as AddressesJSONMainnet from '../../config/contracts/1.json';
 import * as AddressesJSONRopsten from '../../config/contracts/3.json';
@@ -77,7 +77,7 @@ const EXECUTION_OVERHEAD = 180000;
 
 export default class Util {
   public static getWeb3FromProviderUrl(providerUrl: string): Web3 {
-    let provider: Provider;
+    let provider: provider;
 
     if (this.isHTTPConnection(providerUrl)) {
       provider = new Web3.providers.HttpProvider(providerUrl);
@@ -96,7 +96,7 @@ export default class Util {
 
   public static isWatchingEnabled(web3: Web3): Promise<boolean> {
     return new Promise<boolean>(resolve => {
-      web3.currentProvider.send(
+      (web3.currentProvider as WebsocketProvider).send(
         {
           jsonrpc: '2.0',
           id: new Date().getTime(),
@@ -267,7 +267,7 @@ export default class Util {
       blockNumber = parseInt(blockNumber, 10);
     }
 
-    const block = await this.web3.eth.getBlock(blockNumber as number);
+    const block = await this.web3.eth.getBlock(blockNumber as number, true);
 
     if (block) {
       return block;
@@ -284,7 +284,7 @@ export default class Util {
       );
     }
     const block = await this.web3.eth.getBlock(blockNum as number);
-    return block.timestamp;
+    return block.timestamp as number;
   }
 
   public async getTransactionCount(address: string): Promise<number> {
@@ -315,7 +315,7 @@ export default class Util {
     return addresses;
   }
 
-  public stopFilter(filter: Subscribe<any>): Promise<boolean> {
+  public stopFilter(filter: any): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       let unsubscriptionSuccessful: boolean | void = false;
 
@@ -353,10 +353,10 @@ export default class Util {
 
     const resolvedBlocks: Block[] = await Promise.all(blockPromises);
 
-    let prevTimestamp = firstBlock.timestamp;
+    let prevTimestamp = firstBlock.timestamp as number;
     resolvedBlocks.forEach((block: Block) => {
-      const time = block.timestamp - prevTimestamp;
-      prevTimestamp = block.timestamp;
+      const time = (block.timestamp as number) - prevTimestamp;
+      prevTimestamp = block.timestamp as number;
       times.push(time);
     });
 

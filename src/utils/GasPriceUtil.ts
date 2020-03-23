@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import Web3 = require('web3');
+import Web3 from 'web3';
 import { BlockScaleFetchingService } from './GasEstimation/BlockScaleFetchingService';
 import { EthGasStationFetchingService } from './GasEstimation/EthGasStationFetchingService';
 import { Networks } from './Util';

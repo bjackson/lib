@@ -1,3 +1,5 @@
+import { AbiItem } from 'web3-utils';
+
 // tslint:disable
 export default [
   {
@@ -342,4 +344,4 @@ export default [
     stateMutability: 'pure',
     type: 'function'
   }
-];
+] as AbiItem[];

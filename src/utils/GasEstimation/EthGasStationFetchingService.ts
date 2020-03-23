@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { IGasPriceFetchingService, EthGasStationInfo } from '../GasPriceUtil';
 
 export class EthGasStationFetchingService implements IGasPriceFetchingService {
+  // FIXME: Make this public. Downstream libs should be able to modify the endpoint.
   private apiAddress = 'https://ethgasstation.info/json/ethgasAPI.json';
 
   public async fetchGasPrice(): Promise<EthGasStationInfo> {

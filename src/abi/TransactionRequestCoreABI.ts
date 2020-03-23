@@ -1,3 +1,5 @@
+import { AbiItem } from 'web3-utils';
+
 export default [
   {
     payable: true,
@@ -263,4 +265,4 @@ export default [
     stateMutability: 'nonpayable',
     type: 'function'
   }
-];
+] as AbiItem[];

@@ -23,7 +23,7 @@ let secondaryAccount: string;
 export const scheduleTestTx = async (blocksInFuture = 270) => {
   const accounts = await new Promise<string[]>(resolve => {
     // tslint:disable
-    web3.eth.getAccounts((_error, result) => resolve(result));
+    web3.eth.getAccounts((_error: any, result: string[] | PromiseLike<string[]>) => resolve(result));
     // tslint:enable
   });
 
