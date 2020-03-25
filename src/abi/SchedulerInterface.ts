@@ -1,3 +1,5 @@
+import { AbiItem } from "web3/node_modules/web3-utils";
+
 export default [
   {
     constant: false,
@@ -27,4 +29,4 @@ export default [
     stateMutability: 'view',
     type: 'function'
   }
-];
+] as AbiItem[];

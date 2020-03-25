@@ -77,17 +77,17 @@ const EXECUTION_OVERHEAD = 180000;
 
 export default class Util {
   public static getWeb3FromProviderUrl(providerUrl: string): Web3 {
-    let provider: provider;
+    let thisProvider: provider;
 
     if (this.isHTTPConnection(providerUrl)) {
-      provider = new Web3.providers.HttpProvider(providerUrl);
+      thisProvider = new Web3.providers.HttpProvider(providerUrl);
     } else if (this.isWSConnection(providerUrl)) {
-      provider = new Web3.providers.WebsocketProvider(providerUrl);
+      thisProvider = new Web3.providers.WebsocketProvider(providerUrl);
     } else {
       throw Error('Unsupported provider.');
     }
 
-    return new Web3(provider);
+    return new Web3(thisProvider);
   }
 
   public static isHTTPConnection(url: string): boolean {
@@ -324,7 +324,7 @@ export default class Util {
 
         resolve(unsubscriptionSuccessful || false);
       } else {
-        (filter as any).unsubscribe((error: any, success: boolean) => {
+        filter.unsubscribe((error: any, success: boolean) => {
           if (success) {
             resolve(success);
           } else {

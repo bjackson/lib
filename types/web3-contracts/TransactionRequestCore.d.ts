@@ -4,6 +4,7 @@
 import { Contract } from 'web3-eth-contract';
 import { TransactionObject, BlockType } from 'web3/eth/types';
 import { EventData } from 'web3-eth-contract';
+import { EventEmitter } from 'events';
 
 export interface TransactionRequestCoreRawData {
   0: (string)[];
@@ -47,7 +48,8 @@ export class TransactionRequestCore extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): Promise<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     Cancelled(
       options?: {
@@ -55,7 +57,8 @@ export class TransactionRequestCore extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): Promise<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     Claimed(
       options?: {
@@ -63,7 +66,8 @@ export class TransactionRequestCore extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): Promise<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     Executed(
       options?: {
@@ -71,7 +75,8 @@ export class TransactionRequestCore extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): Promise<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     allEvents: (
       options?: {
@@ -79,6 +84,7 @@ export class TransactionRequestCore extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ) => Promise<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ) => EventEmitter;
   };
 }

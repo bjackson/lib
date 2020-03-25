@@ -4,7 +4,8 @@
 import { CustomOptions, contractOptions } from 'web3/eth/contract';
 import { Contract, EventData } from 'web3-eth-contract';
 import { TransactionObject, BlockType } from 'web3/eth/types';
-import { PromiEvent } from 'web3-core';
+import { PromiEvent, EventLog } from 'web3-core';
+import { EventEmitter } from 'events';
 
 export class RequestFactory extends Contract {
   constructor(jsonInterface: any[], address?: string, options?: CustomOptions);
@@ -53,7 +54,8 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): Promise<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     Pause(
       options?: {
@@ -61,7 +63,8 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): PromiEvent<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     Unpause(
       options?: {
@@ -69,7 +72,8 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): PromiEvent<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     OwnershipRenounced(
       options?: {
@@ -77,7 +81,8 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): PromiEvent<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     OwnershipTransferred(
       options?: {
@@ -85,7 +90,8 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): PromiEvent<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     CloneCreated(
       options?: {
@@ -93,7 +99,8 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): PromiEvent<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     RequestCreated(
       options?: {
@@ -101,7 +108,8 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ): PromiEvent<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ): EventEmitter;
 
     allEvents: (
       options?: {
@@ -109,6 +117,7 @@ export class RequestFactory extends Contract {
         fromBlock?: BlockType;
         topics?: (null | string)[];
       },
-    ) => PromiEvent<EventData[]>;
+      cb?: (error: Error, event: EventData) => void
+    ) => EventEmitter;
   };
 }

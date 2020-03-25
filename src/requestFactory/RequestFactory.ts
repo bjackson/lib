@@ -4,7 +4,6 @@ import RequestFactoryABI from '../abi/RequestFactoryABI';
 import { RequestFactory as RequestFactoryContract } from '../../types/web3-contracts/RequestFactory';
 import { EventEmitter } from 'events';
 import { EventLog } from 'web3-core';
-import { EventData } from 'web3-eth-contract';
 import { Filter } from 'web3-eth-contract';
 import { TemporalUnit } from '../eac';
 import Constants from '../Constants';
@@ -38,11 +37,11 @@ export default class RequestFactory {
     return this.instance.methods.isKnownRequest(requestAddress).call();
   }
 
-  public async watchRequestCreatedLogs(
+  public watchRequestCreatedLogs(
     filter = {},
     fromBlock = 1,
     callback: (error: any, log: EventLog) => void
-  ): Promise<EventData[]> {
+  ): EventEmitter {
     const options = { filter, fromBlock };
 
     return this.instance.events.RequestCreated(options);

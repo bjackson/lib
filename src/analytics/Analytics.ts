@@ -2,8 +2,7 @@ import BigNumber from 'bignumber.js';
 import TransactionRequest from '../transactionRequest/TransactionRequest';
 import Web3 from 'web3';
 import RequestFactory from '../requestFactory/RequestFactory';
-import { EventLog, TransactionReceipt } from 'web3-core';
-import { EventData } from 'web3-eth-contract';
+import { EventLog } from 'web3-core';
 import { Util } from '..';
 import fetch from 'node-fetch';
 import { ITransactionRequestRaw } from '../transactionRequest/ITransactionRequest';
@@ -73,9 +72,9 @@ export default class Analytics {
         .RequestCreated({
           fromBlock
         })
-        .on('receipt', (receipt: TransactionReceipt) => {
+        .on('event', (error: any, logs: EventLog[]) => {
           resolve(
-            receipt.logs.map((log: Log) => ({
+            logs.map((log: EventLog) => ({
               address: log.returnValues.request,
               params: log.returnValues.params
             }))

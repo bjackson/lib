@@ -2,11 +2,11 @@
 /// <reference path="./global.d.ts" />
 
 import BigNumber from 'bignumber.js';
-import Web3 = require('web3');
+import Web3 from 'web3';
 import SchedulerInterfaceABI from './abi/SchedulerInterface';
 import { SchedulerInterface } from '../types/web3-contracts/SchedulerInterface';
-import { TransactionReceipt } from 'web3/types';
-import PromiEvent from 'web3/promiEvent';
+import { TransactionReceipt, PromiEvent } from 'web3-core';
+import { TransactionRevertInstructionError} from 'web3-core-helpers';
 import Constants from './Constants';
 import RequestFactory from './requestFactory/RequestFactory';
 import TransactionRequest from './transactionRequest/TransactionRequest';
@@ -111,13 +111,13 @@ export default class EAC {
 
     const tx = {
       from: options.from,
-      to: scheduler._address,
+      to: scheduler.options.address,
       data: encodedABI,
       value: endowment,
       gas: options.scheduleGas.toNumber()
     };
 
-    let sentTx: PromiEvent<TransactionReceipt>;
+    let sentTx: PromiEvent<TransactionReceipt | TransactionRevertInstructionError>;
 
     if (this.privateKey) {
       const signedTx = await this.web3.eth.accounts.signTransaction(tx, this.privateKey);
