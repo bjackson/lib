@@ -3,12 +3,11 @@ import { Util } from '..';
 import RequestFactoryABI from '../abi/RequestFactoryABI';
 import { RequestFactory as RequestFactoryContract } from '../../types/web3-contracts/RequestFactory';
 import { EventEmitter } from 'events';
-import { EventLog } from 'web3-core';
+import { EventLog, BlockNumber } from 'web3-core';
 import { Filter } from 'web3-eth-contract';
 import { TemporalUnit } from '../eac';
 import Constants from '../Constants';
 
-import { BlockType } from 'web3/eth/types';
 
 export default class RequestFactory {
   public instance: RequestFactoryContract;
@@ -87,8 +86,8 @@ export default class RequestFactory {
 
   public async getRequestCreatedEvents(
     filter: Filter = {},
-    fromBlock: BlockType = 'genesis',
-    toBlock: BlockType = 'latest',
+    fromBlock: BlockNumber = 'genesis',
+    toBlock: BlockNumber = 'latest',
     topics: string[] = []
   ): Promise<any[]> {
     const events = await this.instance.getPastEvents('RequestCreated', {
@@ -101,7 +100,7 @@ export default class RequestFactory {
     return events;
   }
 
-  public async getRequestsByOwner(owner: string, startBlock: BlockType, endBlock: BlockType) {
+  public async getRequestsByOwner(owner: string, startBlock: BlockNumber, endBlock: BlockNumber) {
     startBlock = startBlock || (await this.util.getRequestFactoryStartBlock());
     endBlock = endBlock || 'latest';
 

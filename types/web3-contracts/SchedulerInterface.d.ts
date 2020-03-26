@@ -2,7 +2,7 @@
 /* tslint:disable */
 
 import { Contract } from 'web3-eth-contract';
-import { TransactionObject } from 'web3/eth/types';
+import { ContractSendMethod } from 'web3-eth-contract';
 
 export class SchedulerInterface extends Contract {
   methods: {
@@ -12,12 +12,12 @@ export class SchedulerInterface extends Contract {
       _callGas: number | string,
       _callValue: number | string,
       _gasPrice: number | string
-    ): TransactionObject<string>;
+    ): ContractSendMethod<string>;
 
     schedule(
       _toAddress: string,
       _callData: string | number[],
       _uintArgs: (number | string)[]
-    ): TransactionObject<string>;
+    ): ContractSendMethod<string>;
   };
 }

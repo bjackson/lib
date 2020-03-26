@@ -4,8 +4,7 @@ import Constants from '../Constants';
 import * as ethUtil from 'ethereumjs-util';
 import { TransactionReceipt, provider, PromiEvent } from 'web3-core';
 import { Block } from 'web3-eth';
-import { WebsocketProvider } from 'web3/providers';
-import { Transaction, BlockType } from 'web3/eth/types';
+import { WebsocketProvider, Transaction, BlockNumber } from 'web3-core';
 import { ITransactionRequest } from '../transactionRequest/ITransactionRequest';
 
 import * as AddressesJSONMainnet from '../../config/contracts/1.json';
@@ -247,7 +246,7 @@ export default class Util {
     return NETWORK_ID_TO_NAME_MAP[netId];
   }
 
-  public async getRequestFactoryStartBlock(): Promise<BlockType> {
+  public async getRequestFactoryStartBlock(): Promise<BlockNumber> {
     const netId = await this.web3.eth.net.getId();
 
     return REQUEST_FACTORY_STARTBLOCKS[netId] || 0;
@@ -259,7 +258,7 @@ export default class Util {
     return new BigNumber(balance);
   }
 
-  public async getBlock(blockNumber: BlockType = 'latest'): Promise<Block> {
+  public async getBlock(blockNumber: BlockNumber = 'latest'): Promise<Block> {
     if (
       ['genesis', 'latest', 'pending'].indexOf(blockNumber.toString()) === -1 &&
       typeof blockNumber === 'string'
@@ -276,7 +275,7 @@ export default class Util {
     throw Error(`Returned block ${blockNumber} is null`);
   }
 
-  public async getTimestampForBlock(blockNum: BlockType): Promise<number> {
+  public async getTimestampForBlock(blockNum: BlockNumber): Promise<number> {
     const curBlockNum = await this.web3.eth.getBlockNumber();
     if (blockNum > curBlockNum) {
       throw new Error(
