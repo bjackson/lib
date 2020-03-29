@@ -1,7 +1,7 @@
-import BN from 'BN.js';
+import BN from 'bn.js';
 import Web3 from 'web3';
 import Constants from '../Constants';
-import * as ethUtil from 'ethereumjs-util';
+import ethUtil from 'ethereumjs-util';
 import { Block } from 'web3-eth';
 import {
   WebsocketProvider,
