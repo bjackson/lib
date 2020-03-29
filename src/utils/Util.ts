@@ -1,6 +1,7 @@
 import BN from 'bn.js';
 import Web3 from 'web3';
 import Constants from '../Constants';
+// @ts-ignore
 import ethUtil from 'ethereumjs-util';
 import { Block } from 'web3-eth';
 import {
