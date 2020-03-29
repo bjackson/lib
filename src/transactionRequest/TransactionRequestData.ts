@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 import { TemporalUnit } from '../eac';
 import {
   TransactionRequestCore,
@@ -6,25 +6,25 @@ import {
 } from '../../types/web3-contracts/TransactionRequestCore';
 
 interface TransactionRequestScheduleData {
-  claimWindowSize: BigNumber;
-  freezePeriod: BigNumber;
-  reservedWindowSize: BigNumber;
+  claimWindowSize: BN;
+  freezePeriod: BN;
+  reservedWindowSize: BN;
   temporalUnit: TemporalUnit;
-  windowSize: BigNumber;
-  windowStart: BigNumber;
+  windowSize: BN;
+  windowStart: BN;
 }
 
 interface TransactionRequestClaimData {
   claimedBy: string;
-  claimDeposit: BigNumber;
+  claimDeposit: BN;
   paymentModifier: number;
-  requiredDeposit: BigNumber;
+  requiredDeposit: BN;
 }
 
 interface TransactionRequestTransferData {
-  callGas: BigNumber;
-  callValue: BigNumber;
-  gasPrice: BigNumber;
+  callGas: BN;
+  callValue: BN;
+  gasPrice: BN;
   toAddress: string;
 }
 
@@ -39,10 +39,10 @@ interface TransactionRequestMetaData {
 export interface TransactionRequestPaymentData {
   feeRecipient: string;
   bountyBenefactor: string;
-  fee: BigNumber;
-  feeOwed: BigNumber;
-  bounty: BigNumber;
-  bountyOwed: BigNumber;
+  fee: BN;
+  feeOwed: BN;
+  bounty: BN;
+  bountyOwed: BN;
 }
 
 export default class TransactionRequestData {
@@ -71,9 +71,9 @@ export default class TransactionRequestData {
   public fill(data: TransactionRequestCoreRawData) {
     this.claimData = {
       claimedBy: data[0][0],
-      claimDeposit: new BigNumber(data[2][0]),
+      claimDeposit: new BN(data[2][0]),
       paymentModifier: parseInt(data[3][0], 10),
-      requiredDeposit: new BigNumber(data[2][14])
+      requiredDeposit: new BN(data[2][14])
     };
 
     this.meta = {
@@ -87,25 +87,25 @@ export default class TransactionRequestData {
     this.paymentData = {
       feeRecipient: data[0][3],
       bountyBenefactor: data[0][4],
-      fee: new BigNumber(data[2][1]),
-      feeOwed: new BigNumber(data[2][2]),
-      bounty: new BigNumber(data[2][3]),
-      bountyOwed: new BigNumber(data[2][4])
+      fee: new BN(data[2][1]),
+      feeOwed: new BN(data[2][2]),
+      bounty: new BN(data[2][3]),
+      bountyOwed: new BN(data[2][4])
     };
 
     this.schedule = {
-      claimWindowSize: new BigNumber(data[2][5]),
-      freezePeriod: new BigNumber(data[2][6]),
-      reservedWindowSize: new BigNumber(data[2][7]),
+      claimWindowSize: new BN(data[2][5]),
+      freezePeriod: new BN(data[2][6]),
+      reservedWindowSize: new BN(data[2][7]),
       temporalUnit: parseInt(data[2][8], 10),
-      windowSize: new BigNumber(data[2][9]),
-      windowStart: new BigNumber(data[2][10])
+      windowSize: new BN(data[2][9]),
+      windowStart: new BN(data[2][10])
     };
 
     this.txData = {
-      callGas: new BigNumber(data[2][11]),
-      callValue: new BigNumber(data[2][12]),
-      gasPrice: new BigNumber(data[2][13]),
+      callGas: new BN(data[2][11]),
+      callValue: new BN(data[2][12]),
+      gasPrice: new BN(data[2][13]),
       toAddress: data[0][5]
     };
   }

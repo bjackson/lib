@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 import Web3 from 'web3';
 import { BlockScaleFetchingService } from './GasEstimation/BlockScaleFetchingService';
 import { EthGasStationFetchingService } from './GasEstimation/EthGasStationFetchingService';
@@ -15,22 +15,22 @@ export interface IGasPriceFetchingService {
 export type GasPriceEstimation = EthGasStationInfo | BlockScaleInfo;
 
 export interface EthGasStationInfo {
-  average: BigNumber;
-  avgWait: BigNumber;
-  blockTime: BigNumber;
-  fast: BigNumber;
-  fastWait: BigNumber;
-  fastest: BigNumber;
-  fastestWait: BigNumber;
-  safeLow: BigNumber;
-  safeLowWait: BigNumber;
+  average: BN;
+  avgWait: BN;
+  blockTime: BN;
+  fast: BN;
+  fastWait: BN;
+  fastest: BN;
+  fastestWait: BN;
+  safeLow: BN;
+  safeLowWait: BN;
 }
 
 export interface BlockScaleInfo {
-  average: BigNumber;
-  fast: BigNumber;
-  fastest: BigNumber;
-  safeLow: BigNumber;
+  average: BN;
+  fast: BN;
+  fastest: BN;
+  safeLow: BN;
 }
 
 export default class GasPriceUtil {
@@ -45,7 +45,7 @@ export default class GasPriceUtil {
     this.web3 = web3;
   }
 
-  public async networkGasPrice(): Promise<BigNumber> {
+  public async networkGasPrice(): Promise<BN> {
     const gasPriceEstimation = await this.externalApiGasPrice();
 
     return (gasPriceEstimation && gasPriceEstimation.average) || this.getGasPrice();
@@ -70,8 +70,8 @@ export default class GasPriceUtil {
     }
   }
 
-  public async getGasPrice(): Promise<BigNumber> {
-    return new BigNumber(await this.web3.eth.getGasPrice());
+  public async getGasPrice(): Promise<BN> {
+    return new BN(await this.web3.eth.getGasPrice());
   }
 
   private async externalApiGasPrice(): Promise<GasPriceEstimation> {

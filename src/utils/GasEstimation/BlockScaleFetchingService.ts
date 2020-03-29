@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { IGasPriceFetchingService, BlockScaleInfo } from '../GasPriceUtil';
-import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 
 export class BlockScaleFetchingService implements IGasPriceFetchingService {
   private apiAddress = 'https://dev.blockscale.net/api/gasexpress.json';
@@ -20,10 +20,10 @@ export class BlockScaleFetchingService implements IGasPriceFetchingService {
     };
 
     return {
-      average: new BigNumber(toWei(json.standard)),
-      fast: new BigNumber(toWei(json.fast)),
-      fastest: new BigNumber(toWei(json.fastest)),
-      safeLow: new BigNumber(toWei(json.safeLow))
+      average: new BN(toWei(json.standard)),
+      fast: new BN(toWei(json.fast)),
+      fastest: new BN(toWei(json.fastest)),
+      safeLow: new BN(toWei(json.safeLow))
     };
   }
 }

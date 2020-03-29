@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { BigNumber } from 'bignumber.js';
+import BN from 'bn.js';
 import { IGasPriceFetchingService, EthGasStationInfo } from '../GasPriceUtil';
 
 export class EthGasStationFetchingService implements IGasPriceFetchingService {
@@ -31,15 +31,15 @@ export class EthGasStationFetchingService implements IGasPriceFetchingService {
     };
 
     return {
-      average: new BigNumber(toWei(average)),
-      avgWait: new BigNumber(avgWait),
-      blockTime: new BigNumber(Math.floor(block_time)),
-      fast: new BigNumber(toWei(fast)),
-      fastWait: new BigNumber(fastWait),
-      fastest: new BigNumber(toWei(fastest)),
-      fastestWait: new BigNumber(fastestWait),
-      safeLow: new BigNumber(toWei(safeLow)),
-      safeLowWait: new BigNumber(safeLowWait)
+      average: new BN(toWei(average)),
+      avgWait: new BN(avgWait),
+      blockTime: new BN(Math.floor(block_time)),
+      fast: new BN(toWei(fast)),
+      fastWait: new BN(fastWait),
+      fastest: new BN(toWei(fastest)),
+      fastestWait: new BN(fastestWait),
+      safeLow: new BN(toWei(safeLow)),
+      safeLowWait: new BN(safeLowWait)
     };
   }
 }

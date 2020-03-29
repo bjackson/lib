@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 import TransactionRequestData from './TransactionRequestData';
 import Constants from '../Constants';
 import Util from '../utils/Util';
@@ -45,7 +45,7 @@ export default class TransactionRequest implements ITransactionRequest {
    * Window centric getters
    */
 
-  get claimWindowSize(): BigNumber {
+  get claimWindowSize(): BN {
     this.checkData();
 
     return this.data.schedule.claimWindowSize;
@@ -53,12 +53,12 @@ export default class TransactionRequest implements ITransactionRequest {
 
   get claimWindowStart() {
     this.checkData();
-    return this.windowStart.minus(this.freezePeriod).minus(this.claimWindowSize);
+    return this.windowStart.sub(this.freezePeriod).sub(this.claimWindowSize);
   }
 
   get claimWindowEnd() {
     this.checkData();
-    return this.claimWindowStart.plus(this.claimWindowSize);
+    return this.claimWindowStart.add(this.claimWindowSize);
   }
 
   get freezePeriod() {
@@ -68,12 +68,12 @@ export default class TransactionRequest implements ITransactionRequest {
 
   get freezePeriodStart() {
     this.checkData();
-    return this.windowStart.plus(this.claimWindowSize);
+    return this.windowStart.add(this.claimWindowSize);
   }
 
   get freezePeriodEnd() {
     this.checkData();
-    return this.claimWindowEnd.plus(this.freezePeriod);
+    return this.claimWindowEnd.add(this.freezePeriod);
   }
 
   get temporalUnit(): TemporalUnit {
@@ -98,12 +98,12 @@ export default class TransactionRequest implements ITransactionRequest {
 
   get reservedWindowEnd() {
     this.checkData();
-    return this.windowStart.plus(this.reservedWindowSize);
+    return this.windowStart.add(this.reservedWindowSize);
   }
 
   get executionWindowEnd() {
     this.checkData();
-    return this.windowStart.plus(this.windowSize);
+    return this.windowStart.add(this.windowSize);
   }
 
   /**
@@ -112,35 +112,35 @@ export default class TransactionRequest implements ITransactionRequest {
 
   public async beforeClaimWindow() {
     const now = await this.now();
-    return this.claimWindowStart.isGreaterThan(now);
+    return this.claimWindowStart.gt(now);
   }
 
   public async inClaimWindow() {
     const now = await this.now();
-    return this.claimWindowStart.isLessThanOrEqualTo(now) && this.claimWindowEnd.isGreaterThan(now);
+    return this.claimWindowStart.lte(now) && this.claimWindowEnd.gt(now);
   }
 
   public async inFreezePeriod() {
     const now = await this.now();
-    return this.claimWindowEnd.isLessThanOrEqualTo(now) && this.freezePeriodEnd.isGreaterThan(now);
+    return this.claimWindowEnd.lte(now) && this.freezePeriodEnd.gt(now);
   }
 
   public async inExecutionWindow() {
     const now = await this.now();
     return (
-      this.windowStart.isLessThanOrEqualTo(now) &&
-      this.executionWindowEnd.isGreaterThanOrEqualTo(now)
+      this.windowStart.lte(now) &&
+      this.executionWindowEnd.gte(now)
     );
   }
 
   public async inReservedWindow() {
     const now = await this.now();
-    return this.windowStart.isLessThanOrEqualTo(now) && this.reservedWindowEnd.isGreaterThan(now);
+    return this.windowStart.lte(now) && this.reservedWindowEnd.gt(now);
   }
 
   public async afterExecutionWindow() {
     const now = await this.now();
-    return this.executionWindowEnd.isLessThan(now);
+    return this.executionWindowEnd.lt(now);
   }
 
   public async executedAt() {
@@ -184,7 +184,7 @@ export default class TransactionRequest implements ITransactionRequest {
     return this.data.claimData.requiredDeposit;
   }
 
-  public async claimPaymentModifier(): Promise<BigNumber> {
+  public async claimPaymentModifier(): Promise<BN> {
     // If the data is not filled it will cause errors.
     if (!this.data.claimData.paymentModifier) {
       await this.refreshData();
@@ -192,16 +192,16 @@ export default class TransactionRequest implements ITransactionRequest {
 
     // TxRequest is claimed and already has a set paymentModifier.
     if (this.isClaimed) {
-      return new BigNumber(this.data.claimData.paymentModifier);
+      return new BN(this.data.claimData.paymentModifier);
     }
 
     // TxRequest is unclaimed so paymentModifier is calculated.
     const now = await this.now();
-    const elapsed = now.minus(this.claimWindowStart);
-    return elapsed.times(100).dividedToIntegerBy(this.claimWindowSize);
+    const elapsed = now.sub(this.claimWindowStart);
+    return elapsed.muln(100).divRound(this.claimWindowSize);
   }
 
-  public async now(): Promise<BigNumber> {
+  public async now(): Promise<BN> {
     // If being called with an empty temporal unit the data needs to be filled.
     if (!this.temporalUnit) {
       await this.refreshData();
@@ -211,12 +211,12 @@ export default class TransactionRequest implements ITransactionRequest {
       // The reason for the `plus(1)` here is that the next block to be mined
       // is for all intents and purposes the `now` since the soonest this transaction
       // could be included is alongside it.
-      return new BigNumber(await this.web3.eth.getBlockNumber()).plus(1);
+      return new BN(await this.web3.eth.getBlockNumber()).addn(1);
     }
 
     if (this.temporalUnit === TemporalUnit.TIME) {
-      const timestamp = new BigNumber((await this.web3.eth.getBlock('latest')).timestamp);
-      const local = new BigNumber(Math.floor(new Date().getTime() / 1000));
+      const timestamp = new BN((await this.web3.eth.getBlock('latest')).timestamp);
+      const local = new BN(Math.floor(new Date().getTime() / 1000));
 
       return local.gt(timestamp) ? local : timestamp;
     }

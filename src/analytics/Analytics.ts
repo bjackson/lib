@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 import TransactionRequest from '../transactionRequest/TransactionRequest';
 import Web3 from 'web3';
 import RequestFactory from '../requestFactory/RequestFactory';
@@ -58,7 +58,7 @@ export default class Analytics {
       totalEthTransferred = values.reduce((acc, value) => acc + parseFloat(value), 0);
     } catch (e) {
       console.log('Unable to connect to Etherscan. Fetching analytics natively...');
-      totalEthTransferred = new BigNumber(await this.getTotalEthTransferredNatively()).toNumber();
+      totalEthTransferred = new BN(await this.getTotalEthTransferredNatively()).toNumber();
     }
 
     return totalEthTransferred;
@@ -93,8 +93,8 @@ export default class Analytics {
     );
 
     const weiTransferred = transactions.reduce(
-      (sum, tx) => sum.plus(tx.callValue),
-      new BigNumber(0)
+      (sum, tx) => sum.add(tx.callValue),
+      new BN(0)
     );
 
     return this.web3.utils.fromWei(weiTransferred.toString(), 'ether');

@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 import { expect } from 'chai';
 import { providerUrl } from '../helpers';
 import { EAC, Util } from '../../src';
@@ -14,8 +14,8 @@ import Constants from '../../src/Constants';
 const web3 = Util.getWeb3FromProviderUrl(providerUrl);
 const eac = new EAC(web3);
 
-const EXAMPLE_CALL_VALUE = new BigNumber(Math.pow(10, 18)); // 1 ether
-const EXAMPLE_CALL_GAS = new BigNumber(1000000);
+const EXAMPLE_CALL_VALUE = new BN(10).pow(new BN(18)) // 1 ether
+const EXAMPLE_CALL_GAS = new BN('1000000');
 
 let mainAccount: string;
 let secondaryAccount: string;
@@ -30,7 +30,7 @@ export const scheduleTestTx = async (blocksInFuture = 270) => {
   mainAccount = accounts[0].toLowerCase();
   secondaryAccount = accounts[1].toLowerCase();
 
-  const windowStart = new BigNumber((await web3.eth.getBlockNumber()) + blocksInFuture);
+  const windowStart = new BN((await web3.eth.getBlockNumber()) + blocksInFuture);
 
   const receipt = await eac.schedule({
     from: mainAccount,
@@ -48,7 +48,7 @@ describe('ScheduleTx', () => {
   it('schedules a basic transaction', async () => {
     const blocksInFuture = 270;
 
-    const windowStart = new BigNumber((await web3.eth.getBlockNumber()) + blocksInFuture);
+    const windowStart = new BN((await web3.eth.getBlockNumber()) + blocksInFuture);
 
     const receipt = await scheduleTestTx();
 

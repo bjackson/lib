@@ -1,53 +1,53 @@
-import { BigNumber } from 'bignumber.js';
+import BN from 'bn.js';
 
 export interface ITransactionRequest extends ITransactionRequestPending {
   address: string;
-  callValue: BigNumber;
+  callValue: BN;
   cancelData: string;
   claimedBy: string;
-  claimWindowSize: BigNumber;
-  fee: BigNumber;
+  claimWindowSize: BN;
+  fee: BN;
   owner: string;
-  requiredDeposit: BigNumber;
+  requiredDeposit: BN;
   toAddress: string;
   claimData: string;
   executeData: string;
-  bounty: BigNumber;
-  callGas: BigNumber;
-  gasPrice: BigNumber;
+  bounty: BN;
+  callGas: BN;
+  gasPrice: BN;
   isCancelled: boolean;
   isClaimed: boolean;
   wasCalled: boolean;
-  executionWindowEnd: BigNumber;
+  executionWindowEnd: BN;
   temporalUnit: number;
-  claimWindowStart: BigNumber;
+  claimWindowStart: BN;
   wasSuccessful: boolean;
-  windowStart: BigNumber;
-  windowSize: BigNumber;
-  freezePeriod: BigNumber;
-  reservedWindowSize: BigNumber;
-  claimWindowEnd: BigNumber;
-  freezePeriodEnd: BigNumber;
-  reservedWindowEnd: BigNumber;
+  windowStart: BN;
+  windowSize: BN;
+  freezePeriod: BN;
+  reservedWindowSize: BN;
+  claimWindowEnd: BN;
+  freezePeriodEnd: BN;
+  reservedWindowEnd: BN;
 
   afterExecutionWindow(): Promise<boolean>;
   callData(): Promise<string[]>;
   executedAt(): Promise<number>;
   fillData(): Promise<void>;
   refreshData(): Promise<void>;
-  claimPaymentModifier(): Promise<BigNumber>;
+  claimPaymentModifier(): Promise<BN>;
   inReservedWindow(): Promise<boolean>;
   beforeClaimWindow(): Promise<boolean>;
   inClaimWindow(): Promise<boolean>;
   inFreezePeriod(): Promise<boolean>;
   inExecutionWindow(): Promise<boolean>;
-  now(): Promise<BigNumber>;
+  now(): Promise<BN>;
   isClaimedBy(address: string): boolean;
 }
 
 export interface ITransactionRequestPending {
   address: string;
-  gasPrice: BigNumber;
+  gasPrice: BN;
 }
 
 export interface ITransactionRequestRaw {

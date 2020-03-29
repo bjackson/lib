@@ -1,10 +1,16 @@
-import BigNumber from 'bignumber.js';
+import BN from 'BN.js';
 import Web3 from 'web3';
 import Constants from '../Constants';
 import * as ethUtil from 'ethereumjs-util';
-import { TransactionReceipt, provider, PromiEvent } from 'web3-core';
 import { Block } from 'web3-eth';
-import { WebsocketProvider, Transaction, BlockNumber } from 'web3-core';
+import {
+  WebsocketProvider,
+   Transaction,
+   BlockNumber,
+   TransactionReceipt,
+   provider,
+   PromiEvent,
+} from 'web3-core';
 import { ITransactionRequest } from '../transactionRequest/ITransactionRequest';
 
 import * as AddressesJSONMainnet from '../../config/contracts/1.json';
@@ -128,71 +134,69 @@ export default class Util {
    * @param bounty
    */
   public static calcEndowment(callGas: any, callValue: any, gasPrice: any, fee: any, bounty: any) {
-    const callGasBN = new BigNumber(callGas);
-    const callValueBN = new BigNumber(callValue);
-    const gasPriceBN = new BigNumber(gasPrice);
-    const feeBN = new BigNumber(fee);
-    const bountyBN = new BigNumber(bounty);
+    const callGasBN = new BN(callGas);
+    const callValueBN = new BN(callValue);
+    const gasPriceBN = new BN(gasPrice);
+    const feeBN = new BN(fee);
+    const bountyBN = new BN(bounty);
 
     return bountyBN
-      .plus(feeBN)
-      .plus(callGasBN.times(gasPrice))
-      .plus(gasPriceBN.times(EXECUTION_OVERHEAD))
-      .plus(callValueBN);
+      .add(feeBN)
+      .add(callGasBN.mul(gasPrice))
+      .add(gasPriceBN.muln(EXECUTION_OVERHEAD))
+      .add(callValueBN);
   }
 
   public static estimateMaximumExecutionGasPrice(
-    bounty: BigNumber,
-    gasPrice: BigNumber,
-    callGas: BigNumber
+    bounty: BN,
+    gasPrice: BN,
+    callGas: BN
   ) {
     if (!gasPrice || !callGas || !bounty) {
       throw new Error('Missing arguments');
     }
 
-    if (gasPrice.isNegative() || callGas.isNegative() || bounty.isNegative()) {
+    if (gasPrice.isNeg() || callGas.isNeg() || bounty.isNeg()) {
       throw new Error('gasPrice, callGas and bounty has to be positive number');
     }
 
     const arbitraryCoefficient = 0.85;
     const paymentModifier = 0.9;
     const claimingGasAmount = 100000;
-    const claimingGasCost = gasPrice.times(claimingGasAmount);
-    const executionGasAmount = callGas.plus(EXECUTION_OVERHEAD);
+    const claimingGasCost = gasPrice.muln(claimingGasAmount);
+    const executionGasAmount = callGas.addn(EXECUTION_OVERHEAD);
 
     return bounty
-      .times(paymentModifier)
-      .minus(claimingGasCost)
-      .dividedBy(executionGasAmount)
-      .times(arbitraryCoefficient)
-      .decimalPlaces(0);
+      .muln(paymentModifier)
+      .sub(claimingGasCost)
+      .div(executionGasAmount)
+      .muln(arbitraryCoefficient);
   }
 
   public static estimateBountyForExecutionGasPrice(
-    gasPrice: BigNumber,
-    callGas: BigNumber,
-    additionalGasPrice: BigNumber
+    gasPrice: BN,
+    callGas: BN,
+    additionalGasPrice: BN
   ) {
     if (!gasPrice || !callGas || !additionalGasPrice) {
       throw new Error('Missing arguments');
     }
 
-    if (gasPrice.isNegative() || callGas.isNegative() || additionalGasPrice.isNegative()) {
+    if (gasPrice.isNeg() || callGas.isNeg() || additionalGasPrice.isNeg()) {
       throw new Error('gasPrice, callGas and additionalGasPrice has to be positive number');
     }
 
     const arbitraryCoefficient = 0.85;
     const paymentModifier = 0.9;
     const claimingGasAmount = 100000;
-    const claimingGasCost = gasPrice.times(claimingGasAmount);
-    const executionGasAmount = callGas.plus(EXECUTION_OVERHEAD);
+    const claimingGasCost = gasPrice.muln(claimingGasAmount);
+    const executionGasAmount = callGas.addn(EXECUTION_OVERHEAD);
 
     return additionalGasPrice
-      .times(executionGasAmount)
-      .plus(claimingGasCost)
-      .dividedBy(paymentModifier)
-      .dividedBy(arbitraryCoefficient)
-      .decimalPlaces(0);
+      .mul(executionGasAmount)
+      .add(claimingGasCost)
+      .divn(paymentModifier)
+      .divn(arbitraryCoefficient);
   }
 
   private web3: Web3;
@@ -252,10 +256,10 @@ export default class Util {
     return REQUEST_FACTORY_STARTBLOCKS[netId] || 0;
   }
 
-  public async balanceOf(account: string): Promise<BigNumber> {
+  public async balanceOf(account: string): Promise<BN> {
     const balance = (await this.web3.eth.getBalance(account)).toString();
 
-    return new BigNumber(balance);
+    return new BN(balance);
   }
 
   public async getBlock(blockNumber: BlockNumber = 'latest'): Promise<Block> {
@@ -366,12 +370,11 @@ export default class Util {
     return Math.round(times.reduce((a, b) => a + b) / times.length);
   }
 
-  public calculateGasAmount(txRequest: ITransactionRequest): BigNumber {
+  public calculateGasAmount(txRequest: ITransactionRequest): BN {
     return txRequest.callGas
-      .plus(180000)
-      .div(64)
-      .times(65)
-      .decimalPlaces(0);
+      .addn(180000)
+      .divn(64)
+      .muln(65);
   }
 
   public async waitForConfirmations(

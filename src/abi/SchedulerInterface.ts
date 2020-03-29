@@ -1,4 +1,4 @@
-import { AbiItem } from "web3/node_modules/web3-utils";
+import { AbiItem } from "web3-utils";
 
 export default [
   {

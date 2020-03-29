@@ -1,7 +1,7 @@
 // tslint:disable-next-line:no-reference
 /// <reference path="./global.d.ts" />
 
-import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 import Web3 from 'web3';
 import SchedulerInterfaceABI from './abi/SchedulerInterface';
 import { SchedulerInterface } from '../types/web3-contracts/SchedulerInterface';
@@ -20,28 +20,28 @@ export enum TemporalUnit {
 
 type Address = string;
 
-const MINIMUM_WINDOW_SIZE_TIMESTAMP = new BigNumber(5 * 60); // 5 minutes
-export const MINIMUM_WINDOW_SIZE_BLOCK = new BigNumber(16); // 16 blocks
+const MINIMUM_WINDOW_SIZE_TIMESTAMP = new BN(5 * 60); // 5 minutes
+export const MINIMUM_WINDOW_SIZE_BLOCK = new BN(16); // 16 blocks
 export const CLAIM_WINDOW_SIZE_BLOCK = 255;
 
-export const DEFAULT_BOUNTY = new BigNumber('10000000000000000'); // 0.01 ETH
-export const DEFAULT_GAS_PRICE = new BigNumber('30000000000'); // 30 Gwei
-export const DEFAULT_WINDOW_SIZE_BLOCK = MINIMUM_WINDOW_SIZE_BLOCK.times(2);
+export const DEFAULT_BOUNTY = new BN('10000000000000000'); // 0.01 ETH
+export const DEFAULT_GAS_PRICE = new BN('30000000000'); // 30 Gwei
+export const DEFAULT_WINDOW_SIZE_BLOCK = MINIMUM_WINDOW_SIZE_BLOCK.muln(2);
 
 interface SchedulingOptions {
   toAddress: Address;
-  windowStart: BigNumber;
+  windowStart: BN;
   timestampScheduling?: boolean;
-  bounty?: BigNumber;
+  bounty?: BN;
   from?: Address;
   callData?: string;
-  callGas?: BigNumber;
-  callValue?: BigNumber;
-  windowSize?: BigNumber;
-  gasPrice?: BigNumber;
-  fee?: BigNumber;
-  requiredDeposit?: BigNumber;
-  scheduleGas?: BigNumber;
+  callGas?: BN;
+  callValue?: BN;
+  windowSize?: BN;
+  gasPrice?: BN;
+  fee?: BN;
+  requiredDeposit?: BN;
+  scheduleGas?: BN;
 }
 
 enum SchedulingParamsError {
@@ -263,18 +263,18 @@ export default class EAC {
     }
 
     if (typeof options.callGas === 'undefined') {
-      options.callGas = new BigNumber('21000');
+      options.callGas = new BN('21000');
     }
 
     if (typeof options.callValue === 'undefined') {
-      options.callValue = new BigNumber('0');
+      options.callValue = new BN('0');
     }
 
     if (typeof options.windowSize === 'undefined') {
       options.windowSize = (options.timestampScheduling
         ? MINIMUM_WINDOW_SIZE_TIMESTAMP
         : MINIMUM_WINDOW_SIZE_BLOCK
-      ).times(2);
+      ).muln(2);
     }
 
     if (typeof options.gasPrice === 'undefined') {
@@ -282,15 +282,15 @@ export default class EAC {
     }
 
     if (typeof options.fee === 'undefined') {
-      options.fee = new BigNumber('0');
+      options.fee = new BN('0');
     }
 
     if (typeof options.requiredDeposit === 'undefined') {
-      options.requiredDeposit = new BigNumber('0');
+      options.requiredDeposit = new BN('0');
     }
 
     if (typeof options.scheduleGas === 'undefined') {
-      options.scheduleGas = new BigNumber(600000);
+      options.scheduleGas = new BN(600000);
     }
 
     return options;
