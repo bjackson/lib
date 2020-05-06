@@ -10,6 +10,9 @@
         "experimentalObjectRestSpread": true
       }
     },
+    "ignorePatterns": [
+      "./built/**"
+    ],
     "env": {
       "node": true,
       "es6": true,

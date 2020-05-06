@@ -6,11 +6,11 @@ import ethUtil from 'ethereumjs-util';
 import { Block } from 'web3-eth';
 import {
   WebsocketProvider,
-   Transaction,
-   BlockNumber,
-   TransactionReceipt,
-   provider,
-   PromiEvent,
+  Transaction,
+  BlockNumber,
+  TransactionReceipt,
+  provider,
+  PromiEvent
 } from 'web3-core';
 import { ITransactionRequest } from '../transactionRequest/ITransactionRequest';
 
@@ -101,7 +101,7 @@ export default class Util {
   }
 
   public static isWatchingEnabled(web3: Web3): Promise<boolean> {
-    return new Promise<boolean>(resolve => {
+    return new Promise<boolean>((resolve) => {
       (web3.currentProvider as WebsocketProvider).send(
         {
           jsonrpc: '2.0',
@@ -110,7 +110,7 @@ export default class Util {
           params: ['0x16'] // we need to provide at least 1 argument, this is test data
         },
         (err: any) => {
-          resolve(err === null);
+          resolve(!err);
         }
       );
     });
@@ -148,11 +148,7 @@ export default class Util {
       .add(callValueBN);
   }
 
-  public static estimateMaximumExecutionGasPrice(
-    bounty: BN,
-    gasPrice: BN,
-    callGas: BN
-  ) {
+  public static estimateMaximumExecutionGasPrice(bounty: BN, gasPrice: BN, callGas: BN) {
     if (!gasPrice || !callGas || !bounty) {
       throw new Error('Missing arguments');
     }
@@ -223,7 +219,7 @@ export default class Util {
   }
 
   public getTransactionRequestAddressFromReceipt(receipt: TransactionReceipt) {
-    const foundLog = receipt.logs.find(log => log.topics[0] === Constants.NEWREQUESTLOG);
+    const foundLog = receipt.logs.find((log) => log.topics[0] === Constants.NEWREQUESTLOG);
 
     return `0x${foundLog.data.slice(-40)}`;
   }
@@ -372,10 +368,7 @@ export default class Util {
   }
 
   public calculateGasAmount(txRequest: ITransactionRequest): BN {
-    return txRequest.callGas
-      .addn(180000)
-      .divn(64)
-      .muln(65);
+    return txRequest.callGas.addn(180000).divn(64).muln(65);
   }
 
   public async waitForConfirmations(

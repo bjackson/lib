@@ -15,6 +15,7 @@ dist/*
 stats.db
 .env
 config/contracts/1002.json
+.idea/
 
 # Coverage directory
 coverage
